@@ -60,6 +60,35 @@ class DeepResearchEngine:
         self.client = get_client()
         self.model_name = model_name
 
+    def _call_gemini_with_retry(self, prompt: str, is_json: bool = False, max_retries: int = 5) -> str:
+        from google.genai import types
+        from google.genai.errors import ClientError, APIError
+
+        backoff = 5.0
+        for attempt in range(max_retries):
+            try:
+                config = types.GenerateContentConfig(
+                    temperature=0.2 if is_json else 0.4,
+                    response_mime_type="application/json" if is_json else None
+                )
+                resp = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=prompt,
+                    config=config
+                )
+                return resp.text.strip()
+            except (ClientError, APIError, Exception) as e:
+                err_str = str(e)
+                if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                    wait_time = backoff * (2 ** attempt)
+                    print(f"  ⏳ Gemini rate limit encountered (429). Exponential backoff: sleeping {wait_time:.1f}s (attempt {attempt+1}/{max_retries})...")
+                    time.sleep(wait_time)
+                else:
+                    print(f"  ⚠️ Gemini call attempt {attempt+1} failed ({e}), retrying in {backoff}s...")
+                    time.sleep(backoff)
+        config = types.GenerateContentConfig(temperature=0.3)
+        return self.client.models.generate_content(model=self.model_name, contents=prompt, config=config).text.strip()
+
     def decompose_topic(self, topic: str) -> list[str]:
         print(f"🔍 [1/3] Decomposing topic into technical vectors: '{topic}'...")
         prompt = f"""You are a Principal AI Systems Architect. Decompose the following technical research topic into 4 distinct, non-overlapping architectural inquiry vectors for a high-level whitepaper:
@@ -75,17 +104,9 @@ Vectors must cover:
 Return ONLY a valid JSON list of 4 strings representing the vector titles. Example:
 ["Foundational Theory & Algorithmic Mechanics", "Systems Throughput & Resource Trade-offs", "Edge Failure Modes & Security Sandboxing", "Enterprise Sovereign Deployment Blueprint"]"""
 
-        from google.genai import types
-        resp = self.client.models.generate_content(
-            model=self.model_name,
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                temperature=0.2,
-                response_mime_type="application/json"
-            )
-        )
         try:
-            vectors = json.loads(resp.text)
+            raw = self._call_gemini_with_retry(prompt, is_json=True)
+            vectors = json.loads(raw)
             print(f"  ✅ Generated {len(vectors)} research vectors.")
             return vectors
         except Exception as e:
@@ -112,11 +133,9 @@ Deliver a rigorous, production-grade technical evaluation of this vector. Includ
 
 Format in clear GitHub Markdown."""
 
-        resp = self.client.models.generate_content(
-            model=self.model_name,
-            contents=prompt
-        )
-        return resp.text.strip()
+        res = self._call_gemini_with_retry(prompt, is_json=False)
+        time.sleep(2)
+        return res
 
     def synthesize_whitepaper(self, topic: str, vectors: list[str], vector_findings: list[str]) -> str:
         print(f"📑 [3/3] Synthesizing comprehensive Technical Whitepaper...")
@@ -161,11 +180,8 @@ Formal citations referencing key papers (ArXiv, NeurIPS, IEEE, ACM) and foundati
 ---
 Deliver the full, exhaustive Whitepaper in pristine GitHub Flavored Markdown."""
 
-        resp = self.client.models.generate_content(
-            model=self.model_name,
-            contents=prompt
-        )
-        return resp.text.strip()
+        res = self._call_gemini_with_retry(prompt, is_json=False)
+        return res
 
     def run(self, topic: str) -> Path:
         start_time = time.time()

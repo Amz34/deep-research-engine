@@ -1,7 +1,7 @@
 # ⚡ Autonomous Deep Research Engine
 
 [![Research Fleet](https://img.shields.io/badge/Research_Fleet-Autonomous%20Gemini%20Flash-blue?style=flat-square&logo=google)](https://github.com/Amz34/deep-research-engine)
-[![Reports Published](https://img.shields.io/badge/Whitepapers_Published-1-00B8A3?style=flat-square)](https://github.com/Amz34/deep-research-engine)
+[![Reports Published](https://img.shields.io/badge/Whitepapers_Published-2-00B8A3?style=flat-square)](https://github.com/Amz34/deep-research-engine)
 [![Sovereign Cloud](https://img.shields.io/badge/Enterprise-KSA%20%7C%20GCC%20Aligned-FFC01E?style=flat-square)](https://github.com/Amz34)
 [![Daily Dispatch](https://img.shields.io/badge/Daily_Dispatch-10%3A00%20UTC-purple?style=flat-square)](https://github.com/Amz34/deep-research-engine)
 
@@ -40,6 +40,7 @@ flowchart TD
 
 | Date | Whitepaper Title | Access Link |
 |:---:|:---|:---:|
+| `2026-11-08` | [Verifiable AI Agent State Integrity and Confidentiality via OpenTelemetry-Native Observability for Sovereign Air-Gapped Enterprise AI](./reports/2026-11-08-verifiable-agent-state-integrity-and-confidentiality-via-opentelemetry-native-observability-for-air-gapped-enterprise-ai.md) | [`Read Dossier →`](./reports/2026-11-08-verifiable-agent-state-integrity-and-confidentiality-via-opentelemetry-native-observability-for-air-gapped-enterprise-ai.md) |
 | `2026-11-08` | [Enhancing Autonomous Agent Swarms: A Production-Grade Architecture for Speculative Tool Calling & Typed Decision Layers](./reports/2026-11-08-speculative-tool-calling-typed-decision-layers-in-autonomous-agent-swarms.md) | [`Read Dossier →`](./reports/2026-11-08-speculative-tool-calling-typed-decision-layers-in-autonomous-agent-swarms.md) |
 
 ---

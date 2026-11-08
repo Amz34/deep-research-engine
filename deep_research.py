@@ -19,6 +19,7 @@ REPO_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(REPO_DIR))
 
 from core.engine import DeepResearchEngine, REPORTS_DIR
+from core.trending_detector import detect_trending_theme
 
 TRENDING_ONTOLOGY = [
     "Speculative Tool Calling & Typed Decision Layers in Autonomous Agent Swarms",
@@ -162,16 +163,21 @@ def main():
             print("✅ Pushed to GitHub!")
 
     elif args.command == "trending":
-        # Check existing reports to pick one that hasn't been researched yet
         existing_names = [f.name.lower() for f in REPORTS_DIR.glob("*.md")] if REPORTS_DIR.exists() else []
-        candidates = []
-        for t in TRENDING_ONTOLOGY:
-            slug = t.lower()[:20]
-            if not any(slug in e for e in existing_names):
-                candidates.append(t)
+        print("🌐 Scanning Hacker News and arXiv feeds for live trending AI/systems breakthroughs...")
+        try:
+            chosen = detect_trending_theme(engine.client, existing_names)
+            print(f"🔥 Detected Real-Time Trending Theme: '{chosen}'")
+        except Exception as e:
+            print(f"⚠️ Live detection fallback ({e}), falling back to curated systems ontology...")
+            candidates = []
+            for t in TRENDING_ONTOLOGY:
+                slug = t.lower()[:20]
+                if not any(slug in e for e in existing_names):
+                    candidates.append(t)
+            chosen = candidates[0] if candidates else random.choice(TRENDING_ONTOLOGY)
+            print(f"🔥 Selected Theme: '{chosen}'")
 
-        chosen = candidates[0] if candidates else random.choice(TRENDING_ONTOLOGY)
-        print(f"🔥 Selected Trending Theme: '{chosen}'")
         report_path = engine.run(chosen)
         update_readme_index()
 
