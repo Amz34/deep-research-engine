@@ -5,6 +5,12 @@
 [![Sovereign Cloud](https://img.shields.io/badge/Enterprise-KSA%20%7C%20GCC%20Aligned-FFC01E?style=flat-square)](https://github.com/Amz34)
 [![Daily Dispatch](https://img.shields.io/badge/Daily_Dispatch-10%3A00%20UTC-purple?style=flat-square)](https://github.com/Amz34/deep-research-engine)
 
+
+> [!TIP]
+> **Enterprise Research & Autonomous Pipeline Engagements:**
+> To integrate recursive research agents, domain-specific whitepaper pipelines, or source vetted AI contractors:  
+> 💬 **Direct Consultation & Requisitions:** [Connect via Telegram (@AzGem_Bot)](https://t.me/AzGem_Bot) | [GitHub Ecosystem](https://github.com/Amz34) | [Architecture Manifest](https://pastebin.com/6sH3kC7b)
+
 Recursive, multi-angle technical research decomposition and executive whitepaper synthesis engine architected by **[Aamir Zameer (@Amz34)](https://github.com/Amz34)** (Principal AI Systems Architect, Az. Consultancy).
 
 ---
