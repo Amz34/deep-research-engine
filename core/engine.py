@@ -47,6 +47,16 @@ def send_telegram(html_text: str) -> bool:
 
 def get_client():
     from google import genai
+    import os
+    from pathlib import Path
+    if not os.environ.get("GEMINI_API_KEY"):
+        env_file = Path(__file__).resolve().parent.parent / ".env"
+        if env_file.exists():
+            with open(env_file, "r") as f:
+                for line in f:
+                    if line.startswith("GEMINI_API_KEY="):
+                        os.environ["GEMINI_API_KEY"] = line.strip().split("=", 1)[1].strip('"').strip("'")
+                        break
     return genai.Client()
 
 def slugify(text: str) -> str:
