@@ -1,4 +1,4 @@
-#!/usr/bin/env /home/ubuntu/.venvs/antigravity/bin/python
+#!/usr/bin/env python3
 """
 Core Autonomous Deep Research Engine
 ====================================
@@ -46,7 +46,10 @@ def send_telegram(html_text: str) -> bool:
         return False
 
 def get_client():
-    from google import genai
+    try:
+        from google import genai
+    except ImportError:
+        raise RuntimeError("google-genai package is required. Install via: pip install google-genai")
     import os
     from pathlib import Path
     if not os.environ.get("GEMINI_API_KEY"):
@@ -66,11 +69,19 @@ def slugify(text: str) -> str:
     return text.strip('-')
 
 class DeepResearchEngine:
-    def __init__(self, model_name: str = "gemini-2.5-flash"):
-        self.client = get_client()
+    def __init__(self, model_name: str = "gemini-2.5-flash", client=None):
         self.model_name = model_name
+        if client is not None:
+            self.client = client
+        else:
+            try:
+                self.client = get_client()
+            except Exception:
+                self.client = None
 
     def _call_gemini_with_retry(self, prompt: str, is_json: bool = False, max_retries: int = 5) -> str:
+        if self.client is None:
+            raise RuntimeError("Gemini client is not initialized. Ensure GEMINI_API_KEY is configured.")
         from google.genai import types
         from google.genai.errors import ClientError, APIError
 

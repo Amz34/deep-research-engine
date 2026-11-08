@@ -1,4 +1,4 @@
-#!/usr/bin/env /home/ubuntu/.venvs/antigravity/bin/python
+#!/usr/bin/env python3
 """
 Live Autonomous Trending Topic Detector
 =======================================
